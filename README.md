@@ -20,10 +20,3 @@ This project is a modern **AI-ready** login page built using **React.js**, **Vit
 - **Tailwind CSS** – For styling the login form.  
 - **AI (Future Scope)** – Can integrate AI for enhanced security and user behavior analysis.  
 
-## Installation and Setup
-To run this project locally, follow these steps:
-
-### 1️⃣ Clone the repository:
-```sh
-git clone https://github.com/yourusername/login-page.git
-cd login-page
