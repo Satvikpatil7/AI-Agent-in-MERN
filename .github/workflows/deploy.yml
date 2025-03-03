@@ -1,4 +1,54 @@
-git add .github/workflows/deploy.yml
-git commit -m "Fix GitHub Actions workflow"
-git push origin master
+name: Configure Production
 
+on:
+  push:
+    branches:
+      - master  # Runs when pushing to the main branch
+  workflow_dispatch:  # Allows manual triggering
+
+env:
+  PORT: ${{ secrets.PORT }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  REDIS_HOST: ${{ secrets.REDIS_HOST }}
+  REDIS_PORT: ${{ secrets.REDIS_PORT }}
+  REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+  GOOGLE_AI_KEY: ${{ secrets.GOOGLE_AI_KEY }}
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production  # Ensure secrets are used from the Production environment
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures the full repository history is fetched
+
+      - name: Verify Repository Structure
+        run: ls -R  # Debugging step to verify correct repository contents
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18  # Adjust Node.js version as needed
+          cache: 'npm'  # Cache dependencies for faster installs
+
+      - name: Ensure package.json Exists
+        run: |
+          if [ ! -f package.json ]; then
+            echo "Error: package.json not found!"
+            exit 1
+          fi
+
+      - name: Install Dependencies
+        run: npm ci  # Use 'ci' for clean install (faster & avoids version mismatches)
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying to production..."
+          # Add your deployment commands here, such as SSH, Docker, or a cloud service deployment
