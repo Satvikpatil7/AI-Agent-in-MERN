@@ -3,7 +3,7 @@ name: Configure Production
 on:
   push:
     branches:
-      - master  # Runs when pushing to the main branch
+      - main  # Runs when pushing to the main branch
   workflow_dispatch:  # Allows manual triggering
 
 env:
